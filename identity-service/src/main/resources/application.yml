@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: identity
+  datasource:
+    driver-class-name: 'com.mysql.cj.jdbc.Driver'
+    url: 'jdbc:mysql://localhost:3306/identity_service?createDatabaseIfNotExist=true'
+    username: root
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  port: 8080
+  servlet:
+    context-path: /identity
+jwt:
+  valid-duration: 360000 # 1 hour
+  refresh-duration: 604800000 # 7 days
+  signerkey: "ihi80crc9LiT+2yvSqpTwOIJhfcMfvlX2AZCdAtoxkUyNT0W+odgk+AWcod1pLgx"
