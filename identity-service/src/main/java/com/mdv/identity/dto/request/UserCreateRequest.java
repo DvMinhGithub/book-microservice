@@ -17,6 +17,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class UserCreateRequest {
+    String id;
+
     @NotNull(message = "Username cannot be null")
     @Size(min = 5, message = "Username must be at least 5 characters long")
     String username;
@@ -29,6 +31,8 @@ public class UserCreateRequest {
 
     @DobConstraint(minAge = 18, message = "User must be at least 18 years old")
     LocalDate dob;
+
+    String city;
 
     List<String> roles;
 }

@@ -21,3 +21,6 @@ jwt:
   valid-duration: 360000 # 1 hour
   refresh-duration: 604800000 # 7 days
   signerkey: "ihi80crc9LiT+2yvSqpTwOIJhfcMfvlX2AZCdAtoxkUyNT0W+odgk+AWcod1pLgx"
+app:
+  services:
+    profile: http://localhost:8081/profile

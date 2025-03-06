@@ -16,21 +16,28 @@ import com.mdv.identity.dto.response.UserResponse;
 import com.mdv.identity.entity.User;
 import com.mdv.identity.exception.ApiErrorCode;
 import com.mdv.identity.exception.ApiException;
+import com.mdv.identity.mapper.ProfileMapper;
 import com.mdv.identity.mapper.UserMapper;
 import com.mdv.identity.repository.RoleRepository;
 import com.mdv.identity.repository.UserRepository;
+import com.mdv.identity.repository.htppClient.ProfileClient;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
+    private final ProfileMapper profileMapper;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final ProfileClient profileClient;
 
     private static final String USER_NOT_FOUND = "User not found: ";
 
@@ -43,6 +50,8 @@ public class UserService {
 
         try {
             user = userRepository.save(user);
+            request.setId(user.getId());
+            profileClient.createUser(profileMapper.mapToProfileCreateRequest(request));
         } catch (DataIntegrityViolationException e) {
             throw new ApiException(ApiErrorCode.USER_EXISTED);
         }

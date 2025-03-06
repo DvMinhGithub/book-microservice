@@ -1,4 +1,4 @@
-package com.mdv.profile.dto.request;
+package com.mdv.identity.dto.response;
 
 import java.time.LocalDate;
 
@@ -13,8 +13,8 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProfileCreateRequest {
-    String userId;
+public class UserProfileResponse {
+    String id;
     String firstName;
     String lastName;
     LocalDate dob;
