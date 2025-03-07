@@ -1,6 +1,5 @@
 package com.mdv.identity.dto.response;
 
-import java.time.LocalDate;
 import java.util.Set;
 
 import com.mdv.identity.entity.Role;
@@ -17,8 +16,5 @@ import lombok.experimental.FieldDefaults;
 public class UserResponse {
     String id;
     String username;
-    String firstName;
-    String lastName;
-    LocalDate dob;
     Set<Role> roles;
 }

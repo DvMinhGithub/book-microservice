@@ -5,7 +5,8 @@ spring:
     driver-class-name: 'com.mysql.cj.jdbc.Driver'
     url: 'jdbc:mysql://localhost:3306/identity_service?createDatabaseIfNotExist=true'
     username: root
-    password: ${DATABASE_PASSWORD}
+    # password: ${DATABASE_PASSWORD}
+    password: 123456
   jpa:
     properties:
       hibernate:

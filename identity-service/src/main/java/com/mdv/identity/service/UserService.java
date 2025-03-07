@@ -9,11 +9,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mdv.identity.dto.request.UserCreateRequest;
 import com.mdv.identity.dto.request.UserUpdateRequest;
 import com.mdv.identity.dto.response.UserResponse;
+import com.mdv.identity.entity.Role;
 import com.mdv.identity.entity.User;
+import com.mdv.identity.enums.UserRole;
 import com.mdv.identity.exception.ApiErrorCode;
 import com.mdv.identity.exception.ApiException;
 import com.mdv.identity.mapper.ProfileMapper;
@@ -41,12 +44,14 @@ public class UserService {
 
     private static final String USER_NOT_FOUND = "User not found: ";
 
+    @Transactional
     public UserResponse createUser(UserCreateRequest request) {
         User user = userMapper.mapToUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        var roles = roleRepository.findAllById(request.getRoles());
-        user.setRoles(new HashSet<>(roles));
+        HashSet<Role> roles = new HashSet<>();
+        roleRepository.findById(UserRole.USER.toString()).ifPresent(roles::add);
+        user.setRoles(roles);
 
         try {
             user = userRepository.save(user);
