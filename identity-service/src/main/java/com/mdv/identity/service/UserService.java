@@ -46,6 +46,10 @@ public class UserService {
 
     @Transactional
     public UserResponse createUser(UserCreateRequest request) {
+        User existUser = userRepository.findByUsername(request.getUsername()).orElse(null);
+        if (existUser != null) {
+            throw new ApiException(ApiErrorCode.USER_EXISTED);
+        }
         User user = userMapper.mapToUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 

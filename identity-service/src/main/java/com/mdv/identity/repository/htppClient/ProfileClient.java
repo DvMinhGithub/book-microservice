@@ -11,6 +11,6 @@ import com.mdv.identity.dto.response.UserProfileResponse;
 @FeignClient(name = "profile-service", url = "${app.services.profile}")
 public interface ProfileClient {
 
-    @PostMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/internal/users", produces = MediaType.APPLICATION_JSON_VALUE)
     UserProfileResponse createUser(@RequestBody ProfileCreateRequest request);
 }
