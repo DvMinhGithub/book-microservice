@@ -1,5 +1,7 @@
 package com.mdv.profile.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -13,4 +15,6 @@ public interface UserProfileMapper {
     UserProfile toEntity(ProfileCreateRequest request);
 
     UserProfileResponse toResponse(UserProfile entity);
+
+    List<UserProfileResponse> toResponse(List<UserProfile> entities);
 }

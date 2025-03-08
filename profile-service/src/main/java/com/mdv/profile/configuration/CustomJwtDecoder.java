@@ -1,4 +1,4 @@
-package com.mdv.identity.configuration;
+package com.mdv.profile.configuration;
 
 import java.text.ParseException;
 import java.time.Instant;

@@ -29,7 +29,7 @@ import lombok.experimental.FieldDefaults;
 public class UserController {
     UserService userService;
 
-    @PostMapping
+    @PostMapping("/register")
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreateRequest request) {
         UserResponse user = userService.createUser(request);
         return new ApiResponse<>(200, null, user);

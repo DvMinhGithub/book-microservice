@@ -2,6 +2,7 @@ package com.mdv.gateway.configuration;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -27,6 +28,10 @@ import reactor.core.publisher.Mono;
 public class AuthenticationFilter implements GlobalFilter, Ordered {
     private final IdentityService identityService;
     private final ObjectMapper objectMapper;
+    private String[] publicEndpoints = { "/identity/auth/.*", "/identity/users/register" };
+
+    @Value("${app.api-prefix}")
+    private String apiPrefix;
 
     @Override
     public int getOrder() {
@@ -35,14 +40,17 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        log.info("Authentication filter");
+        if (isPublicEndpoint(exchange.getRequest().getPath().value())) {
+            return chain.filter(exchange);
+        }
+
         List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || authHeader.isEmpty()) {
             log.error("No authorization header");
             return unauthenticated(exchange.getResponse());
         }
+
         String token = authHeader.getFirst().replace("Bearer ", "");
-        log.info("Token: {}", token);
 
         return identityService.introspect(token).flatMap(response -> {
             if (!response.getResult().isValid()) {
@@ -51,6 +59,15 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             }
             return chain.filter(exchange);
         }).onErrorResume(e -> unauthenticated(exchange.getResponse()));
+    }
+
+    private boolean isPublicEndpoint(String path) {
+        for (String publicEndpoint : publicEndpoints) {
+            if (path.matches(apiPrefix + publicEndpoint)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     Mono<Void> unauthenticated(ServerHttpResponse response) {

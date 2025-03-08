@@ -1,5 +1,8 @@
 package com.mdv.profile.service;
 
+import java.util.List;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.mdv.profile.dto.request.ProfileCreateRequest;
@@ -27,5 +30,11 @@ public class UserRepositoryService {
     public UserProfileResponse getProfile(String id) {
         log.info("Fetching user profile for user: {}", id);
         return userProfileMapper.toResponse(userProfileRepository.findById(id).orElse(null));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserProfileResponse> getUsers() {
+        log.info("Fetching all user profiles");
+        return userProfileMapper.toResponse(userProfileRepository.findAll());
     }
 }
