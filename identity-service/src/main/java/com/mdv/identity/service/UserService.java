@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,24 +26,24 @@ import com.mdv.identity.repository.RoleRepository;
 import com.mdv.identity.repository.UserRepository;
 import com.mdv.identity.repository.htppClient.ProfileClient;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.experimental.FieldDefaults;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final UserMapper userMapper;
-    private final ProfileMapper profileMapper;
+    UserRepository userRepository;
+    RoleRepository roleRepository;
+    UserMapper userMapper;
+    ProfileMapper profileMapper;
+    PasswordEncoder passwordEncoder;
+    ProfileClient profileClient;
+    KafkaTemplate<String, String> kafkaTemplate;
 
-    private final PasswordEncoder passwordEncoder;
-
-    private final ProfileClient profileClient;
-
-    private static final String USER_NOT_FOUND = "User not found: ";
+    static String USER_NOT_FOUND = "User not found: ";
 
     @Transactional
     public UserResponse createUser(UserCreateRequest request) {
@@ -61,6 +62,7 @@ public class UserService {
             user = userRepository.save(user);
             request.setId(user.getId());
             profileClient.createUser(profileMapper.mapToProfileCreateRequest(request));
+            kafkaTemplate.send("user-created", "Welcome to our member " + user.getUsername());
         } catch (DataIntegrityViolationException e) {
             throw new ApiException(ApiErrorCode.USER_EXISTED);
         }
