@@ -13,7 +13,7 @@ public enum ApiErrorCode {
     INVALID_KEY(400, "Invalid key", HttpStatus.BAD_REQUEST),
     USER_EXISTED(400, "User already exists", HttpStatus.BAD_REQUEST),
     USERNAME_INVALID(400, "Username must be at least 8 characters", HttpStatus.BAD_REQUEST),
-    INVALID_PASSWORD(400, "Password must be at least 8 characters", HttpStatus.BAD_REQUEST),
+    PASSWORD_INCORRECT(400, "Password is incorrect", HttpStatus.BAD_REQUEST),
     INVALID_DOB(400, "Your age must be at least 18", HttpStatus.BAD_REQUEST),
 
     USER_NOT_EXISTED(404, "User not found", HttpStatus.NOT_FOUND),

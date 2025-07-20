@@ -84,7 +84,7 @@ public class AuthenticationService {
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
         if (!authenticated) {
-            throw new ApiException(ApiErrorCode.INVALID_PASSWORD);
+            throw new ApiException(ApiErrorCode.PASSWORD_INCORRECT);
         }
 
         var token = generateToken(user);
@@ -168,7 +168,7 @@ public class AuthenticationService {
                 new Date(Instant.now().plus(validDuration, ChronoUnit.HOURS).toEpochMilli());
 
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
-                .subject(user.getUsername())
+                .subject(user.getId())
                 .issuer("mdv")
                 .issueTime(issueTime)
                 .expirationTime(expiryTime)
