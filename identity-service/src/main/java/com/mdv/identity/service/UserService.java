@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mdv.event.dto.NotificationEvent;
 import com.mdv.identity.dto.request.UserCreateRequest;
 import com.mdv.identity.dto.request.UserUpdateRequest;
 import com.mdv.identity.dto.response.UserResponse;
@@ -41,7 +42,7 @@ public class UserService {
     ProfileMapper profileMapper;
     PasswordEncoder passwordEncoder;
     ProfileClient profileClient;
-    KafkaTemplate<String, String> kafkaTemplate;
+    KafkaTemplate<String, Object> kafkaTemplate;
 
     static String USER_NOT_FOUND = "User not found: ";
 
@@ -62,7 +63,15 @@ public class UserService {
             user = userRepository.save(user);
             request.setId(user.getId());
             profileClient.createUser(profileMapper.mapToProfileCreateRequest(request));
-            kafkaTemplate.send("user-created", "Welcome to our member " + user.getUsername());
+
+            NotificationEvent notificationEvent = NotificationEvent.builder()
+                    .chanel("EMAIL")
+                    .recipient(user.getEmail())
+                    .subject("Welcome to our member !")
+                    .body("Welcome to our member " + user.getUsername())
+                    .build();
+
+            kafkaTemplate.send("notification-delivery", notificationEvent);
         } catch (DataIntegrityViolationException e) {
             throw new ApiException(ApiErrorCode.USER_EXISTED);
         }

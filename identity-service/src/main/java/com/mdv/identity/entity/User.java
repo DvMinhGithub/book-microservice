@@ -33,6 +33,13 @@ public class User {
 
     String password;
 
+    @Column(unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
+    String email;
+
+    @Column(name = "email_verified", nullable = false)
+    @Builder.Default
+    private boolean emailVerified = false;
+
     @ManyToMany
     Set<Role> roles;
 }

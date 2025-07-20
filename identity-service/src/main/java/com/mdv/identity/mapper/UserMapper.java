@@ -13,6 +13,7 @@ import com.mdv.identity.entity.User;
 public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "emailVerified", ignore = true)
     User mapToUser(UserCreateRequest request);
 
     UserResponse mapToUserResponse(User user);
@@ -21,5 +22,7 @@ public interface UserMapper {
     @Mapping(target = "username", ignore = true)
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "password", ignore = true)
+    @Mapping(target = "emailVerified", ignore = true)
+    @Mapping(target = "email", ignore = true)
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
 }

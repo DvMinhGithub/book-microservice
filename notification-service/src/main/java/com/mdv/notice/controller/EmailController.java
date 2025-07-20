@@ -1,7 +1,6 @@
 package com.mdv.notice.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,10 +27,5 @@ public class EmailController {
             .message("Email sent successfully")
             .code(HttpStatus.OK.value())
             .build();
-    }
-
-    @KafkaListener(topics = "user-created")
-    public void listen(String message) {
-        System.out.println("Received message: " + message);
     }
 }
