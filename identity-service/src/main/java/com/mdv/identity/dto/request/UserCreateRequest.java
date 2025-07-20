@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mdv.identity.validator.DobConstraint;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -25,6 +26,9 @@ public class UserCreateRequest {
 
     @Size(min = 8, message = "Password must be at least 8 characters long")
     String password;
+
+    @Email(message = "Invalid email address")
+    String email;
 
     String firstName;
     String lastName;

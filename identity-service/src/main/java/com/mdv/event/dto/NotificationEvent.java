@@ -1,4 +1,4 @@
-package com.mdv.notice.dto.request;
+package com.mdv.event.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,10 +12,11 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class SendEmailRequest {
-    Recipient to;
-    String htmlContent;
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class NotificationEvent {
+    String chanel;
+    String recipient;
     String subject;
+    String body;
 }
